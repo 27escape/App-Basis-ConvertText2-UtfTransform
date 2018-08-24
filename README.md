@@ -15,12 +15,14 @@ I have only implemented a small set of smilies, ones that I am likely to use.
 
 ## Formatting
 
-* flip     <f>text</f>      upside down and reversed
-* bold     <b>text</b>
-* italic   <i>text</i>
-* bubbles  <o>text</o>
-* script   <s>text</s>
-* leet     <l>text</l>      LeetSpeak
+* flip     \<f>text\</f>      upside down and reversed
+* bold     \<b>text\</b>
+* italic   \<i>text\</i>
+* bubbles  \<o>text\</o>
+* script   \<s>text\</s>
+* leet     \<l>text\</l>      LeetSpeak
+
+use the included script bin/utftx to convert your text
 
 ## Smilies
 
