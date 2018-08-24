@@ -1,3 +1,6 @@
+0.5.0
+  * some fractions
+  * extra words as smilies, like :grin: for :)
 0.4.0  2014-05-28
   * updating tests to test separate smiles and reflect proper formatting ability
 0.3.0 2014-05-28

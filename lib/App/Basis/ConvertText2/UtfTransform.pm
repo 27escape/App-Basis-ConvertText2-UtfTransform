@@ -55,24 +55,25 @@ L<http://txtn.us/>
 
 =cut
 
-package App::Basis::ConvertText2::UtfTransform;
+package App::Basis::ConvertText2::UtfTransform ;
 
-use 5.014;
-use warnings;
-use strict;
-use Acme::LeetSpeak;
-use Text::Emoticon;
-use Exporter;
-use vars qw( @EXPORT @ISA);
+use 5.014 ;
+use warnings ;
+use strict ;
+use Acme::LeetSpeak ;
+use Text::Emoticon ;
+use Exporter ;
+use vars qw( @EXPORT @ISA) ;
+use utf8::all ;
 
-@ISA = qw(Exporter);
+@ISA = qw(Exporter) ;
 
 # this is the list of things that will get imported into the loading packages
 # namespace
 @EXPORT = qw(
     utf_transform
     utf_smilies
-);
+    ) ;
 
 # ----------------------------------------------------------------------------
 
@@ -122,7 +123,7 @@ my %flip = (
     "?" => "\x{00BF}",
     "!" => "\x{00A1}",
     "," => ",",
-);
+) ;
 
 my %bold = (
     "A" => "\x{1D400}",
@@ -190,7 +191,7 @@ my %bold = (
     "?" => "?",
     "!" => "!",
     "," => ",",
-);
+) ;
 
 my %italic = (
     "A" => "\x{1D434}",
@@ -258,7 +259,7 @@ my %italic = (
     "?" => "?",
     "!" => "!",
     "," => ",",
-);
+) ;
 
 # mathematical bold script capital and small
 # http://www.fileformat.info/info/unicode/category/Lu/list.htm
@@ -330,7 +331,7 @@ my %script = (
     "?" => "?",
     "!" => "!",
     "," => ",",
-);
+) ;
 
 my %bubbles = (
     "A" => "\x{24B6}",
@@ -398,47 +399,73 @@ my %bubbles = (
     "?" => "?",
     "!" => "!",
     "," => ",",
-);
+) ;
 
 # http://www.fileformat.info/info/unicode/category/So/list.htm
 my %smilies = (
-    '<3'           => "\x{2665}",     #heart
-    ':heart:'      => "\x{2665}",     #heart
-    ':)'           => "\x{1f600}",    #smile
-    ':D'           => "\x{1f625}",    #grin
-    '8-)'          => "\x{1f60e}",    #cool
-    ':P'           => "\x{1f61b}",    #pull tounge
-    ":'("          => "\x{1f62c}",    #cry
-    ':('           => "\x{2639}",     #sad
-    ";)"           => "\x{1f609}",    #wink
-    ":sleep:"      => "\x{1f634}",    #sleep
-    ":halo:"       => "\x{1f607}",    #halo
-    ":devil:"      => "\x{1f608}",    #devil
-    ":horns:"      => "\x{1f608}",    #devil
-    "(c)"          => "\x{00a9}",     # copyright
-    "(r)"          => "\x{00ae}",     # registered
-    "(tm)"         => "\x{0099}",     # trademark
+    '<3'           => "\x{2665}",     # heart
+    ':heart:'      => "\x{2665}",     # heart
+    ':)'           => "\x{1f600}",    # smile
+    ':smile:'      => "\x{1f600}",    # smile
+    ':D'           => "\x{1f601}",    # grin
+    ':grin:'       => "\x{1f601}",    # grin
+    '8-)'          => "\x{1f60e}",    # cool
+    ':cool:'       => "\x{1f60e}",    # cool
+    ':P'           => "\x{1f61b}",    # pull tounge
+    ':tongue:'     => "\x{1f61b}",    # pull tounge
+    ":'("          => "\x{1f62d}",    # cry
+    ":cry:"        => "\x{1f62d}",    # cry
+    ':('           => "\x{2639}",     # sad
+    ':sad:'        => "\x{2639}",     # sad
+    ";)"           => "\x{1f609}",    # wink
+    ":wink:"       => "\x{1f609}",    # wink
+    ":sleep:"      => "\x{1f634}",    # sleep
+    ":halo:"       => "\x{1f607}",    # halo
+    ":devil:"      => "\x{1f608}",    # devil
+    ":horns:"      => "\x{1f608}",    # devil
+    ":fear:"       => "\x{1f631}",    # fear
+    "(c)"          => "\x{a9}",     # copyright
+    ":c:"          => "\x{a9}",     # copyright
+    ":copyright:"  => "\x{a9}",     # copyright
+    "(r)"          => "\x{ae}",     # registered
+    ":r:"          => "\x{ae}",     # registered
+    ":registered:" => "\x{ae}",     # registered
+    "(tm)"         => "\x{99}",     # trademark
+    ":tm:"         => "\x{99}",     # trademark
+    ":trademark:"  => "\x{99}",     # trademark
     ":email:"      => "\x{2709}",     # email
-    ":yes:"        => "\x{2713}",     # tick
-    ":no:"         => "\x{2715}",     # cross
-    ":beer:"       => "\x{1F37A}",    # beer
+    ":yes:"        => "\x{2714}",     # tick / check
+    ":no:"         => "\x{2718}",     # cross
+    ":beer:"       => "\x{1f37a}",    # beer
     ":wine:"       => "\x{1f377}",    # wine
     ":wine_glass:" => "\x{1f377}",    # wine
     ":cake:"       => "\x{1f382}",    # cake
     ":star:"       => "\x{2606}",     # star
     ":ok:"         => "\x{1f44d}",    # ok = thumbsup
-    ":yes:"        => "\x{1f44d}",    # yes = thumbsup
-    ":thumbsup:"   => "\x{1f44d}",    # thumbsdown
-    ":thumbsdown:" => "\x{1f44e}",    # thumbsup
+    ":thumbsup:"   => "\x{1f44d}",    # thumbsup
+    ":thumbsdown:" => "\x{1f44e}",    # thumbsdown
     ":bad:"        => "\x{1f44e}",    # bad = thumbsdown
-    ":no:"         => "\x{1f44e}",    # no = thumbsdown
     ":ghost:"      => "\x{1f47b}",    # ghost
-    ":skull:"      => "\x{1f480}",    # skull
+    ":skull:"      => "\x{1f480}",    # skull 1f480
     ":time:"       => "\x{231a}",     # time, watch face
     ":hourglass:"  => "\x{231b}",     # hourglass
-);
+    '1/2'          => "\x{00bd}",
+    '1/3'          => "\x{2153}",
+    '2/3'          => "\x{2154}",
+    '1/4'          => "\x{00bc}",
+    '3/4'          => "\x{00be}",
+    '1/5'          => "\x{2155}",
+    '2/5'          => "\x{2156}",
+    '3/5'          => "\x{2157}",
+    '1/6'          => "\x{2159}",
+    '5/6'          => "\x{215a}",
+    '1/8'          => "\x{215b}",
+    '3/8'          => "\x{215c}",
+    '5/8'          => "\x{215d}",
+    '7/8'          => "\x{215e}",
+) ;
 
-my $smiles = join( '|', map { quotemeta($_) } keys %smilies );
+my $smiles = join( '|', map { quotemeta($_) } keys %smilies ) ;
 
 my %code_map = (
     f => \%flip,
@@ -446,31 +473,31 @@ my %code_map = (
     i => \%italic,
     o => \%bubbles,
     s => \%script,
-);
+) ;
 
 # ----------------------------------------------------------------------------
 # regexp replace function
-sub _transform {
-    my ( $code, $string ) = @_;
-    my $transform = 1;
+sub _transform
+{
+    my ( $code, $string ) = @_ ;
+    my $transform = 1 ;
 
     if ( $code eq 'f' ) {
 
         # needs to be reversed and in lower case for flip
-        $string = reverse lc($string);
-    }
-    elsif ( $code eq 'l' ) {
+        $string = reverse lc($string) ;
+    } elsif ( $code eq 'l' ) {
 
         # leet
-        $string    = leet($string);
-        $transform = 0;
+        $string    = leet($string) ;
+        $transform = 0 ;
     }
 
     if ( $transform && $code_map{$code} ) {
-        $string =~ s/([A-ZA-z0-9?!,])/$code_map{$code}->{$1}/gsm;
+        $string =~ s/([A-ZA-z0-9?!,])/$code_map{$code}->{$1}/gsm ;
     }
 
-    return $string;
+    return $string ;
 }
 
 # ----------------------------------------------------------------------------
@@ -499,13 +526,14 @@ transformed string
 
 =cut
 
-sub utf_transform {
-    my ($in) = @_;
+sub utf_transform
+{
+    my ($in) = @_ ;
 
     # transform for formatting
-    $in =~ s|<(\w)>(.*?)</\1>|_transform( $1, $2)|egsi;
+    $in =~ s|<(\w)>(.*?)</\1>|_transform( $1, $2)|egsi ;
 
-    return $in;
+    return $in ;
 }
 
 # ----------------------------------------------------------------------------
@@ -516,35 +544,35 @@ transform some character strings into UTF smilies
 
 I have only implemented a small set of smilies, ones that I am likely to use
 
-    | smilie                    | symbol      |
-    |---------------------------+-------------|
-    | <3. :heart:               | heart       |
-    | :)                        | smile       |
-    | :D                        | grin        |
-    | 8-)                       | cool        |
-    | :P                        | pull tongue |
-    | :(                        | cry         |
-    | :(                        | sad         |
-    | ;)                        | wink        |
-    | :halo:                    | halo        |
-    | :devil:, :horns:          | devil horns |
-    | (c)                       | copyright   |
-    | (r)                       | registered  |
-    | (tm)                      | trademark   |
-    | :email:                   | email       |
-    | :yes:                     | tick        |
-    | :no:                      | cross       |
-    | :beer:                    | beer        |
-    | :wine:, :wine_glass:      | wine        |
-    | :cake:                    | cake        |
-    | :star:                    | star        |
-    | :ok:, :thumbsup:          | thumbsup    |
-    | :bad:, :thumbsdown:       | thumbsup    |
-    | :ghost:                   | ghost       |
-    | :skull:                   | skull       |
-    | :hourglass:               | hourglass   |
-    | :time:                    | watch face  |
-    | :sleep:                   | sleep       |
+    | smilie                    | symbol        |
+    |---------------------------+---------------|
+    | <3. :heart:               | heart         |
+    | :), :smile:               | smile         |
+    | :D, :grin:                | grin          |
+    | 8-), :cool:               | cool          |
+    | :P, :tongue:              | tongue        |
+    | :(, :cry:                 | cry           |
+    | :(, :sad:                 | sad           |
+    | ;), :wink:                | wink          |
+    | :halo:                    | halo          |
+    | :devil:, :horns:          | devil horns   |
+    | (c)                       | c, copyright  |
+    | (r)                       | r, registered |
+    | (tm)                      | tm, trademark |
+    | :email:                   | email         |
+    | :yes:                     | tick          |
+    | :no:                      | cross         |
+    | :beer:                    | beer          |
+    | :wine:, :wine_glass:      | wine          |
+    | :cake:                    | cake          |
+    | :star:                    | star          |
+    | :ok:, :thumbsup:          | thumbsup      |
+    | :bad:, :thumbsdown:       | thumbsdown    |
+    | :ghost:                   | ghost         |
+    | :skull:                   | skull         |
+    | :hourglass:               | hourglass     |
+    | :time:                    | watch face    | 
+    | :sleep:                   | sleep         |
 
 B<Parameters>  
 
@@ -556,12 +584,13 @@ transformed string
 
 =cut
 
-sub utf_smilies {
-    my ($in) = @_;
+sub utf_smilies
+{
+    my ($in) = @_ ;
 
-    $in =~ s/(?<!\w)($smiles)(?!\w)/$smilies{$1}/g;
+    $in =~ s/(?<!\w)($smiles)(?!\w)/$smilies{$1}/g ;
 
-    return $in;
+    return $in ;
 }
 
 # ----------------------------------------------------------------------------
@@ -571,4 +600,4 @@ sub utf_smilies {
 =cut
 
 # ----------------------------------------------------------------------------
-1;
+1 ;
